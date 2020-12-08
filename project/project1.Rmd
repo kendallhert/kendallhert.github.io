@@ -1,8 +1,207 @@
 ---
-title: "Project 1"
-author: "Me"
-date: "2020-12-01"
+title: "project1"
+author: "Kendall Hertenberger klh3958"
+date: "10/16/2020"
 output: html_document
 ---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, fig.align = "center", warning = F, message = F,
+tidy=TRUE, tidy.opts=list(width.cutoff=60), R.options=list(max.print=100))
+```
 
-## Test Project 1
+```{r}
+library(ggplot2)
+library(tidyverse)
+library(readr)
+drinks <- read_csv("drinks.csv")
+library(readxl)
+GDP1 <- read_excel("GDP1.xls")
+library(readxl)
+population_figures_by_country_csv_csv<-read_excel("population-figures-by-country-csv_csv.xls")
+```
+
+
+Introduction: 
+  I have chosen three datasets to merge for this project. I chose to merge three datasets due to the fact that I could not find a sufficient amount of data by only merging two datasets. 
+  The first dataset I chose displays the servings of beer, wine and spirits in average serving sizes per person by country in 2010. It then has a column for the total liters of pure alcohol per person. I found this dataset in the "fivethirtyeight" package. It caught my eye because I enjoy going to breweries and wineries, and was inspired to do something related to that. 
+  I chose to compare the servings of beer, spirits and wine in each country in 2010 to the GDP of each country from 2000-2019 and the population of each country in 2010. I was interested to see if the GDP or population size in 2010 had any correlation to the total liters of pure alcohol consumed per person. I am expecting to see a positive correlation between GDP and total liters of pure alcohol consumed per person. 
+  I found my second two datasets from kaggle.com and was able to isolate and download the population and GDP statistics. I downloaded the datasets into Excel and then imported them into R-Studio. 
+
+
+
+```{r}
+library(tidyverse)
+library(tidyr)
+drinks2<-inner_join (drinks, GDP1, by=c("country"="Country Name"))
+drinks2
+
+projectdata<-inner_join(drinks2, population_figures_by_country_csv_csv, by=c("country"="Country"))
+projectdata
+
+
+```
+1. The original imported datasets were already tidy, so those functions will be used later on in the project. 
+2. I chose to join my datasets using inner_join. I joined the datasets by country, so that each country would have a column displaying the number of beer servings, the number of wine servings, the number of spirit servings, the total liters of pure alcohol per person, the GDP for each year, and the population for the year 2010. I chose to use inner join and drop the unmatched rows without introducing NAs. I chose to drop rows that did not have a match in either dataset due to the fact that there is a possibility each data set left out countries that were reported.The drinks dataset contained 193 rows, the GDP dataset contained 220 rows.
+  After joining the drinks dataset with the GDP dataset using inner_join, 41 rows were dropped from the original drinks dataset - meaning that there were 41 countries that did not have a match between datasets. There were 68 rows dropped from the GDP dataset. 
+  After joining the dataset that combined the drinks and GDP (drinks2), I joined the drinks2 dataset with the population dataset that contained the population for each country in 2010. I used inner_join for this merge as well and no rows were lost during the second join. After joining all of my datasets, I titled my combined data "projectdata," and had a resulting dataset with 152 rows and 27 columns. 
+  
+```{r}
+projectdata1<-rename(projectdata, Population2010= Year_2010)
+projdata1<-projectdata1%>%select(Country_Code, country, Population2010, "2010", everything())%>%rename(GDP2010 = "2010")
+projdata1
+projdata2<-projdata1%>%arrange(desc(Population2010))%>%mutate(total_alcohol_servings = wine_servings+spirit_servings+beer_servings)%>% mutate(average_alcohol_servings =(beer_servings+wine_servings+spirit_servings)/3)%>%select(Country_Code, country, Population2010, GDP2010, beer_servings, wine_servings, spirit_servings, total_alcohol_servings, average_alcohol_servings, everything())
+projdata2
+projdata4<-
+projdata4.1<-projdata2%>%filter(Population2010<=300000)%>%summarize(mean(GDP2010,na.rm=T))
+projdata4.1
+projdata5<-projdata2%>%group_by(country)%>%mutate(mean_beer_to_wine = mean(beer_servings/wine_servings))%>%select(Country_Code, country, Population2010, GDP2010, beer_servings, wine_servings, spirit_servings, total_alcohol_servings, average_alcohol_servings, mean_beer_to_wine, everything())
+pd9<-projdata5%>%rename(GDP2000="2000", GDP2001="2001", GDP2002="2002", GDP2003="2003", GDP2004="2004", GDP2005="2005", GDP2006="2006", GDP2007="2007", GDP2008="2008",GDP2009="2009",GDP2011="2011",GDP2012="2012",GDP2013="2013", GDP2014="2014", GDP2015="2015", GDP2016="2016",GDP2017="2017", GDP2018="2018",GDP2019="2019")
+sumfunct<-pd9%>%group_by(country)%>%mutate(mean_beer_to_wine = mean(beer_servings/wine_servings))%>%select(Country_Code, country, Population2010, beer_servings, wine_servings, spirit_servings, total_alcohol_servings, average_alcohol_servings, mean_beer_to_wine, total_litres_of_pure_alcohol,everything())
+sumfunct
+```
+  The first thing I did was rename the column titled "Year_2010," to a column titled "Population." I then used select to rearrange the order that the columns appeared in and changed the name of the column titled "2010" to a column titled "GDP." I then used the arrange function to arrange the population of each country in descending order and used the mutate function to create a new column displaying the total alcohol servings for each country independent of the serving size of each type of alcohol. I used the mutate function again to create a new column displaying the average alcohol servings for each country independent of the serving size of each type of alcohol, and once again used the select function to rearrange the order that the columns appear in. I used the filter function to filter countries with a population lesser than or equal to 300,000 and used the summarize function to calculate the mean GDP (1.003) for countries witha populaiton lesser than or equal to 300,000. I then grouped the dataset by country and used the mutate function to create a column for the mean beer to wine servings. 
+  
+```{r}
+sumfunct2<-sumfunct%>%group_by(country)%>%select(11:30)%>%mutate(gdptotal= GDP2000+GDP2001+GDP2002+GDP2003+GDP2004+GDP2005+GDP2006+GDP2007+GDP2008+GDP2009+GDP2010+GDP2011+GDP2012+GDP2013+GDP2014+GDP2015+GDP2016+GDP2017+GDP2018+GDP2019)
+sumfunct2
+only2010<-sumfunct[-c(12:30)]
+projdatana<-na.omit(only2010)
+projdatanaif<-projdatana%>% filter_all(all_vars(!is.infinite(.)))
+```
+
+
+ 
+
+
+```{r}
+meansum<-projdatanaif%>%summarize(mean_pop= mean(Population2010, na.rm = T), sd_pop =sd(Population2010, na.rm=T), n=n(), var(Population2010, na.rm = T ),min(Population2010), max(Population2010), n_distinct(Population2010, na.rm = T))
+meansum
+```
+I ran summary statistics for population in 2010, the mean population was 40445736, the standard deviation for population in 2010 was 149486300, there were 152 entries (n) for population in 2010, the variation was 2.234615e+16, the minimum population was 104137 and the maximum population was 1337705000, there were 152 distinct populations in 2010. 
+
+
+```{r}
+sum2<-projdatanaif%>%summarize(mean_gdp= mean(GDP2010, na.rm = T), sd_gdp =sd(GDP2010, na.rm=T), n=n(), var(GDP2010, na.rm = T ),min(GDP2010), max(GDP2010), n_distinct(GDP2010, na.rm = T))
+sum2
+```
+I ran summary statistics for GDP in 2010, the mean gdp was 4.667256, the standard deviation of gdp in 2010 was 4.087896, there were 152 entries and the variance was 16.71089. The minimum gdp was -8.924176 while the maximum gdp was 19.67532. There were 152 distinct entries for gdp in 2010. 
+
+```{r}
+sum3<-projdatanaif%>%summarize(mean.beer= mean(beer_servings, na.rm = T), sd.beer =sd(beer_servings, na.rm=T), n=n(), var(beer_servings, na.rm = T ),min(beer_servings), max(beer_servings), n_distinct(beer_servings, na.rm = T))
+sum3
+```
+I ran summary statistics for beer servings in 2010, the mean beer servings was 111.4013, the standard deviation wa 102.9907, there were 152 entries. The variance was 10607.08,the minimum amount of beer served was 0, and the maximum amount of beer servings was 376. There were 112 distinct entries. 
+```{r}
+sum4<-projdatanaif%>%summarize(mean.wine= mean(wine_servings, na.rm = T), sd.wine =sd(wine_servings, na.rm=T), n=n(), var(wine_servings, na.rm = T ),min(wine_servings), max(wine_servings), n_distinct(wine_servings, na.rm = T))
+sum4
+```
+I ran summary statistics for wine servings in 2010. The mean wine servings for 2010 was 54.15789 across all countries, and the standard deviation was 84.12889. There were 152 entries and the variance was 7077.67. The minimum wine servings was 0, while the maximum wine servings was 
+370. There were 68 distinct entries. 
+```{r}
+sum5<-projdatanaif%>%summarize(mean.spiritservings= mean(spirit_servings, na.rm = T), sd.spirit =sd(spirit_servings, na.rm=T), n=n(), var(spirit_servings, na.rm = T ),min(spirit_servings), max(spirit_servings), n_distinct(spirit_servings, na.rm = T))
+sum5
+```
+I ran summary statistics for spirit servings in 2010 for all countries and determined that the mean spirit servings for all countries was 80.42105, the standard deviation of spirit servings was 83.15178, the variation was 6914.219, the minimum amount of spirit servings was 0, while the maximum amount of spirit servings was 373. There were 92 distinct entries and 152(n) total data entries (one for each country). 
+```{r}
+sum6<-projdatanaif%>%summarize(mean.total.liters= mean(total_litres_of_pure_alcohol, na.rm = T), sd.total.liters =sd(total_litres_of_pure_alcohol, na.rm=T), n=n(), var(total_litres_of_pure_alcohol, na.rm = T ),min(total_litres_of_pure_alcohol), max(total_litres_of_pure_alcohol), n_distinct(total_litres_of_pure_alcohol, na.rm = T))
+sum6
+```
+Summary statistics for total liters of alcohol consumed in 2010 - I found the mean total liters of pure alcohol for all countries ot be 4.9L, the standard deviation of total liters of pure alcohol for all countries was summarized as 3.797419, the variation of total liters was 14.42 for all countries, there were 152 integers (n), the minimum total liters of pure alcohol served out of all countries was zero while the max was 14.4L, and there were 80 distinct entries out of all 152 countries. 
+
+```{r}
+sum7<-projdatanaif%>%group_by(country)%>%summarize(mean.avg.alc.servings= mean(average_alcohol_servings, na.rm = T), n=n(), min(average_alcohol_servings), max(average_alcohol_servings), n_distinct(average_alcohol_servings, na.rm = T))
+sum7
+```
+Summary statistics for the average alcohol servings grouped by country 
+
+```{r}
+gdpcount<-sumfunct2%>%group_by(country)%>%summarize_at(vars(GDP2010:GDP2019),mean,na.rm=T)
+gdpcount
+```
+
+Grouping by country, I utilized summary statistics to find the mean gdp for each country by year. 
+
+```{r}
+sumfunct
+only2010<-sumfunct[-c(12:30)]
+
+
+
+
+```
+To create the correlation map, I only wanted data from 2010, so I removed all of the GDP data recorded for years that were not 2010. 
+
+```{r}
+write_csv(only2010, "numericproj.csv")
+numericproj<-na.omit(only2010)
+core<-only2010[,3:11]%>%na.omit(only2010)
+core%>%cor(core,method="spearman")%>%as.data.frame()%>%rownames_to_column()%>%pivot_longer(-1)%>%ggplot(aes(rowname, name, fill=value))+geom_tile()+geom_text(aes(label=round(value,2)))+xlab("")+ylab("")+coord_fixed()+scale_fill_gradient2(low="red", mid="white", high="blue")
+```
+Correlation heat map of numeric values is seen above. I created a correlation matrix first by using only numeric data from the year 2010 and omitted any NAs. 
+
+```{r}
+library(viridis)
+ggplot(numericproj, aes(GDP2010, total_alcohol_servings ))+geom_point(aes(color=country))+ggtitle("Total Alcohol Servings as a Function of GDP")+theme(legend.position="none")+xlab("GDP in 2010")+ylab("Total Alcohol Servings")+scale_y_continuous(breaks=c(0,50,100,150,200,250,300,350,400,450,500,550,600,650,700))
+```
+This scatterplot explores the relationship bewteen GDP in each country in 2010 and the total alcohol servings recorded per country in 2010. I created this plot to test my original hypothesis predicting that the higher the GDP the higher the total alcohol servings - I predicted a positive correlation between GDP and alcohol servings. According to the plot, there is no correlation between the GDP in 2010 and the total amount of alcohol served in each country.I used data only from the year 2010 and omitted all NAs from the dataset before running the plot. 
+
+## R Markdown
+
+```{r}
+chinatong<-numericproj%>%filter(country=="China"| country=="Tonga")
+chinatong
+ggplot(chinatong, aes(x=country,y=beer_servings,fill=country))+geom_bar(position="dodge",stat="summary")+ ylab("Beer Servings in 2010")+xlab("Country") +scale_y_continuous(breaks=c(0, 10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,125,150))+scale_fill_brewer()+ggtitle("Beer Servings in 2010 Compared Between China and Tonga")+theme(axis.line = element_line(colour="dark blue", size=0.5, linetype="solid"))
+
+
+```
+This bar graph compares beer servings between China, the country with the highest population in 2010, and Tonga, the country with the lowest population in 2010. Based on the bar chart, China had more beer servings in 2010 than Tonga did in 2010. I used data from the year 2020 and omitted any NAs from the dataset. I created this graph because China had a population of 1337705000 in the year 2010 while Tonga had the lowest population in 2010 o 104137. I was interested in seeing how much higher China's beer servings per person were in the year 2010, but they only differ by 43 servings. 
+
+
+```{r}
+library(ggplot2)
+projdatanaif%>%arrange(desc(GDP2010))
+
+projdatana<-na.omit(only2010)
+projdatanaif<-projdatana%>% filter_all(all_vars(!is.infinite(.)))
+projdatanaif
+naif<-projdatanaif[-c(1:2)]
+clust_dat1<-naif%>%dplyr::select(GDP2010,total_alcohol_servings)
+clust_dat1
+set.seed(348)
+kmeans22<-clust_dat1%>% kmeans(2)
+kmeans22
+kmeans22$size
+kmeans22$centers
+kmeans22$betweenss
+kmeans22$tot.withinss
+kmeansclust22<-clust_dat1%>%mutate(cluster=as.factor(kmeans22$cluster))
+kmeansclust22%>%ggplot(aes(GDP2010, total_alcohol_servings, color=cluster))+geom_point()
+
+library(cluster)
+sil1_width<-vector()
+for(i in 2:10){
+  kms<-kmeans(clust_dat1,centers=i)
+  sil<-silhouette(kms$cluster, dist(clust_dat1))
+  sil1_width[i]<-mean(sil[,3])
+}
+ggplot()+geom_line(aes(x=1:10, y=sil1_width))+scale_x_continuous(name="k", breaks=1:10)
+```
+According to the silhouette method, the optimal number of clusters was 2. I then ran a kmeans based on the GDP and the total number of alcohol servings per country. The clusters were readily identifiable and there was not a large amount of overlap. 
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

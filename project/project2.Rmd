@@ -1,8 +1,236 @@
 ---
-title: "Project 2"
-author: "Me"
-date: "2020-12-01"
+title: 'Project 2: Modeling'
+author: "Kendall Hertenberger klh3958"
+date: "11/24/2020"
 output: html_document
 ---
 
-## Test Project 2
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(dplyr)
+library(readxl)
+collegedat<-read_excel("CollegeDistance.xls")
+head(collegedat)
+```
+Introduction: 
+  I chose the college distance dataset from the AER package. The college distance dataset is a collection of data compiled from surveys by the department of education in the year 1980. There are 4,739 observations and 14 variables. Gender, ethinicity, income, and region are categorical variables. The groups within ethnicity are African-American, Hispanic and other. The groups within region are West or other. The groups within income is determining if the income is above 25,000USD per year. The binary varbiables of fcollege, home and urban are representing whether the student's father attended college, whether the student's mother attended college, if the student's family owns their home, or if the student's school is in an urban area respectively. In regards to numeric variables, the score variable represents the base year composite test score of the students, the unemp variable indicates the county unemployment rate in 1980, the wage indicates the state hourly wage in 1980, the distance indicates the distance from a 4-year college in incriments of 10 miles, tuition indicates the average 4-year college tuition in incriments of 1000USD, education indicates the number of years of education -- 12 years meaning the student is a senior, 13 indicating a vocational degree, 14 years indicating an associates degree, 16 representing a bachelor's degree and anything above 16 years indicating graduate school. 
+```{r}
+
+man1<-manova(cbind(score, distance)~income, data=collegedat)
+summary(man1)
+```
+I ran a one-way manova test to determine the effect of income levels on two dependent variables: the score of the base year composite test given to high school seniors and distance from the closest 4-year college. 
+Ho: The means of all groups are equal for each response variable of score and distance. 
+Ha: For at least one response variable, score or distance, at least one group mean differs. 
+The MANOVA test indicates a significant difference (p<0.0001) between the income levels on the combined dependent variables of score and distance. Because the MANOVA is significant, a one-way ANOVA is performed below to determine the mean difference across groups. 
+```{r}
+summary.aov(man1)
+```
+According to the univariate ANOVA, both groups are significant with p-values being less than the alpha value of 0.05, the null hypothesis can be rejected, meaning that for at least one of the response variables, score or distance, at least one group mean differs for income level. A post-hoc t-test is performed below to determine which income levels differ. I understand that because I had two groups, I could determine significance from ANOVA, but I ran the t-tests for formality purposes, and to achieve a proper bonferroni value. The t-tests can be seen below. 
+```{r}
+collegedat%>%group_by(income)%>%summarize(mean(score), mean(distance))
+pairwise.t.test(collegedat$score, collegedat$income, p.adj="none")
+pairwise.t.test(collegedat$distance, collegedat$income, p.adj="none")
+(0.95)^4
+1-0.8145062
+
+```
+
+The mean score for students from high income families is 53.32905, the mean distance for students from high income families is 1.512454 (or 15.12454 miles). The mean score for students from low income families is 49.90189, the mean distance for students from low income families is 1.920362 (19.20362 miles). One MANOVA, two ANOVAs and two post-hoc t-tests were ran for a total of four tests. If you run 4 tests, each with a Type I error rate of 0.05, the probability of at least one type I error is 1-0.95^4 = 0.1854938. The adjusted bonferroni correction is then 0.05/4 = 0.0125. Using the adjusted bonferroni value, everything remains significant, the null hypothesis is rejected.(need to discuss assumptions of MANOVA and significance more)
+
+```{r}
+femh<-collegedat%>%select(gender, ethnicity,education)%>%filter(gender=="female", ethnicity=="hispanic")
+nrow(femh)
+hispanic<-as.vector(femh$education)
+femaf<-collegedat%>%select(gender, ethnicity, education)%>%filter(gender=="female", ethnicity=="afam")
+africanam<-as.vector(femaf$education)
+femedu<-data.frame(condition=c(rep("hispanic",478), rep("africanam", 466)), education=c(hispanic,africanam))
+head(femedu)
+```
+To determine if there is an association between hispanic and african american females and education level, a mean difference randomization test will be ran. There are 466 african american females in the sample and 478 hispanic females in the sample. I created vectors for hispanic females and african american females by isolating their education levels respectively. I then created a dataframe indicating the ethnicity of the females and their respective education levels. 
+
+Ho: Mean education level for Hispanic females and African-American females is the same. 
+Ha: Mean education level is different for Hispanic females and African-American females.  
+```{r}
+library(ggplot2)
+ggplot(femedu, aes(education,fill=condition))+geom_histogram(bins=6.5)+facet_wrap(~condition, ncol=2)+theme(legend.position = "none")
+```
+
+```{r}
+fem1<-femedu%>%group_by(condition)%>%summarize(m=mean(education))%>%summarize(diff(m))
+randdist<-vector()
+for(i in 1:5000){
+  new<-data.frame(education=sample(femedu$education), condition=femedu$condition)
+  randdist[i]<-mean(new[new$condition=="hispanic",]$education)-
+    mean(new[new$condition=="africanam", ]$education)
+}
+{hist(randdist, main="", ylab=""); abline(v=c(-0.223589, 0.223589), col="red")}
+mean(randdist< -0.223589 | randdist>0.223589)
+```
+5,000 random permutations were taken, and the p-value for permutation test is equal to 0.0398, which is less than the alpha value of 0.05. This means that the null hypothesis is rejected, and the results are significant. The difference in means is 0.223589. Mean education level is different for Hispanic females and African-American females.(create a plot visualizing the null dist and test stat)?? 
+
+```{r}
+#linear regression model 
+collegedat$lnscore<-log(collegedat$score)
+fitlin<-lm(lnscore~education + unemp, data=collegedat)
+summary(fitlin)
+```
+3.2976015 is the predicted score value when education and unemployment =0. 
+0.0452646 is the slope for education on score while holding unemployment constant. 
+-0.0011 is the slope for unemployment on score while holding education constant. 
+score= 3.2976015 + 0.0452646(education)-0.0011(unemployment)
+
+```{r}
+collegedat%>%ggplot(aes(unemp, score))+geom_point()+geom_smooth(method="lm", se=F)
+```
+
+Ho: While controlling for unemployment, education does not explain variation in score. 
+Ho: While controlling for education, unemployment does not explain variation in score. 
+```{r}
+library(lmtest)
+summary(fitlin)$coef[,1:2]
+coeftest(fitlin, vcoc=vcovHC(fit))[,1:2]
+```
+The results of education are significant, there is not a difference seen in corrected SE values. The standard error for education is 0.001268754 while the standard error for unemployment is 0.000821375. 
+
+```{r}
+bootdat<-sample_frac(collegedat,replace=T)
+sampdist<-replicate(5000,{
+  bootdat<-sample_frac(collegedat, replace=T)
+  fitlin1<-lm(lnscore~education + unemp, data=bootdat)
+coef(fitlin1)
+})
+sampdist%>%t%>%as.data.frame%>%summarize_all(sd)
+```
+
+
+```{r}
+collegedat$fcollege1<-ifelse(collegedat$fcollege=="yes", 1,0)
+collegedat$mcollege1<-ifelse(collegedat$mcollege=="yes",1,0)
+collegedat$home1<-ifelse(collegedat$home=="yes",1,0)
+collegedat$urban1<-ifelse(collegedat$home=="yes",1,0)
+head(collegedat)
+```
+The first thing I did before running the logistic regression model predicting a binary variable from two explanatory variables was format binary variables using ifelse from fcollege, mcollege, home and urban. The new columns created are fcollege1, mcollege1, home1, and urban1. For the logistic regression model, I will predict fcollege from distance and unemployment. 
+```{r}
+fitlog<- glm(fcollege1~ distance + unemp, data=collegedat, family="binomial" (link="logit"))
+summary(fitlog)
+logit<-coef(fitlog)%>%round(5)%>%data.frame
+logit
+coef(fitlog)%>%exp%>%round(5)%>%data.frame
+```
+ Intercept: odds of father attending college for distance=0 and unemployment=0 is 0.6155829. Controlling for unemployment, for every one additional increase in distance (measured in incriments of 10 miles), odds of father attending college increase by a factor of 0.8717595. Controlling for distance, for every one additional increase in unemployment, the odds of father attending college increases by 0.9173709.The log-odds scale coefs and odds scale coefs can be seen above. Going up 1 distance multiplies odds by a factor of 0.87176, holding unemployment constant. Going up 1 incriment in unemployment multiplies the odds by a factor of 0.91737. The confusion matrix can be seen below.The TPR =0, the TNR = 1, the PPV= 1. The AUC is 0.6117558, which is not great, meaning that it is hard to predict whether or not the father attended college from distance from a 4-year university and unemployment. 
+```{r}
+library(tidyverse)
+library(interactions)
+library(lmtest)
+library(plotROC)
+library(ggplot2)
+library(knitr)
+```
+
+```{r}
+opts_chunk$set(fig.align="center", fig.height=5, message=FALSE, warning=FALSE, fig.width=8, tidy.opts=list(width.cutoff=60),tidy=TRUE)
+
+class_diag<-function(probs,truth){
+  tab<-table(factor(probs>.5,levels=c("FALSE","TRUE")),truth)
+  acc=sum(diag(tab))/sum(tab)
+  sens=tab[2,2]/colSums(tab)[2]
+  spec=tab[1,1]/colSums(tab)[1]
+  ppv=tab[2,2]/rowSums(tab)[2]
+  f1=2*(sens*ppv)/(sens+ppv)
+
+  if(is.numeric(truth)==FALSE & is.logical(truth)==FALSE){
+    truth<-as.numeric(truth)-1}
+  
+  ord<-order(probs, decreasing=TRUE)
+  probs <- probs[ord]; truth <- truth[ord]
+  
+  TPR=cumsum(truth)/max(1,sum(truth)) 
+  FPR=cumsum(!truth)/max(1,sum(!truth))
+  
+  dup<-c(probs[-1]>=probs[-length(probs)], FALSE)
+  TPR<-c(0,TPR[!dup],1); FPR<-c(0,FPR[!dup],1)
+  
+  n <- length(TPR)
+  auc<- sum( ((TPR[-1]+TPR[-n])/2) * (FPR[-1]-FPR[-n]) )
+
+  data.frame(acc,sens,spec,ppv,f1,auc)
+}
+  
+  
+```
+
+```{r}
+probs<-predict(fitlog, type="response")
+table(predict=as.numeric(probs>.5), truth=collegedat$fcollege1)%>%addmargins
+library(ggplot2)
+ggplot()
+ROC1<-ggplot(collegedat)+geom_roc(aes(d=fcollege1,m=probs), n.cuts = 0)+geom_segment(aes(x=0, xend=1,y=0, yend=1),lty=2)
+ROC1
+calc_auc(ROC1)
+collegedat$logit<-predict(fitlog, type="link")
+collegedat%>%ggplot(aes(logit, color=fcollege, fill=fcollege))+geom_density(alpha=.4)+theme(legend.position = c(0.85,0.85))+geom_vline(xintercept = 0)+xlab("predictor(logit)")
+```
+
+```{r}
+fitlog2<-glm(fcollege1~ distance + unemp +wage +score +tuition + education, data=collegedat, family="binomial" (link="logit"))
+summary(fitlog2)
+coef(fitlog2)%>%round(5)%>%data.frame
+coef(fitlog2)%>%exp%>%round(5)%>%data.frame
+probs2<-predict(fitlog2, type="response")
+table(predict=as.numeric(probs2>.5), truth=collegedat$fcollege1)%>%addmargins
+113/986
+ROC2<-ggplot(collegedat)+geom_roc(aes(d=fcollege1,m=probs2), n.cuts = 0)+geom_segment(aes(x=0, xend=1,y=0, yend=1),lty=2)
+ROC2
+calc_auc(ROC2)
+set.seed(1234)
+k=10
+cdat<-collegedat[sample(nrow(collegedat)),]
+folds<-cut(seq(1:nrow(cdat)), breaks=k, labels=F)
+diags<-NULL
+for (i in 1:k){
+  train<-cdat[folds!=i,]
+  test<-cdat[folds--i,]
+  truth<-test$fcollege1
+  fit<-glm(fcollege1~., data=collegedat, family="binomial")
+  probs<-predict(fitlog2, newdata=test, type="response")
+  diags<-rbind(diags, class_diag(probs2, truth))
+}
+summarize_all(diags, mean)
+``` 
+The TPR= 113/986=0.1146045, the TNR=3661/3753 =0.97548628, the PPV=113/205=0.55121951. The AUC = 0.7350951, which is fair because it is between 0.7-0.8. 
+
+after running the 10 fold CV, the acc= 0.7921924, the auc=0.5086058.
+```{r}
+library(glmnet)
+y<-as.matrix(collegedat$fcollege1)
+x<-model.matrix(fcollege1~., data=collegedat)[,-1]
+head(x)
+x<-scale(x)
+cv<-cv.glmnet(x,y,family="binomial")
+lasso<-glmnet(x,y,family = "binomial", lambda=cv$lambda.1se)
+coef(lasso)
+```
+
+the variables for fcollegeyes is the only variable retained. 
+```{r}
+set.seed(1234)
+k=10
+data1<-collegedat[sample(nrow(collegedat)),]
+folds<-cut(seq(1:nrow(collegedat)), breaks=k, labels=F)
+diags<-NULL
+for(i in 1:k){
+  train<-data1[folds!=i,]
+  test<-data1[folds==i,]
+  fitt<-lm(fcollege1~fcollege,data=collegedat)
+  yhat<-predict(fitt, newdata=test)
+  diags[i]<-mean((test$fcollege1-yhat)^2)
+}
+mean(diags)
+```
+

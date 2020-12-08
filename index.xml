@@ -6,43 +6,42 @@
     <description>Recent content on Kendall Hertenberger</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Fri, 04 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 07 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>First Post </title>
+      <title>Python and R-studio </title>
+      <link>/post/2020/12/07/python-and-r-studio/</link>
+      <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/12/07/python-and-r-studio/</guid>
+      <description>print(&amp;quot;Hello World!&amp;quot;) ## Hello World! After using R-studio for the majority of the semester, it definitely took me some time to adjust to Python. However, once I got the hang of it, I began to like it more than R-studio (*gasp).</description>
+    </item>
+    
+    <item>
+      <title>Darrell the Dachshund </title>
       <link>/post/2020/12/04/first-post/</link>
       <pubDate>Fri, 04 Dec 2020 00:00:00 +0000</pubDate>
       
       <guid>/post/2020/12/04/first-post/</guid>
-      <description> Hello Hello world, here is my dacshund, Darrell, in a cow costume. </description>
+      <description>All about Darrell Hello world! Here is my dacshund, Darrell, in a cow costume.Darrell is six years old and his favorite things to do include playing fetch, going through the Starbucks drive-thru for puppuccinos, and sleeping inside of the fuzziest blankets he can find.
+I got Darrell when he was just nine months old, he was dumped in a parking lot and of course I had to take him home with me.</description>
     </item>
     
     <item>
-      <title>Project 1</title>
-      <link>/project/project1/</link>
-      <pubDate>Tue, 01 Dec 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/project/project1/</guid>
-      <description> Test Project 1  </description>
-    </item>
-    
-    <item>
-      <title>Project 2</title>
+      <title>Project 2: Modeling</title>
       <link>/project/project2/</link>
-      <pubDate>Tue, 01 Dec 2020 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/project/project2/</guid>
-      <description> Test Project 2  </description>
+      <description>library(dplyr) ## ## Attaching package: &amp;#39;dplyr&amp;#39; ## The following objects are masked from &amp;#39;package:stats&amp;#39;: ## ## filter, lag ## The following objects are masked from &amp;#39;package:base&amp;#39;: ## ## intersect, setdiff, setequal, union library(readxl) collegedat&amp;lt;-read_excel(&amp;quot;CollegeDistance.xls&amp;quot;) ## New names: ## * `` -&amp;gt; ...1 head(collegedat) ## # A tibble: 6 x 15 ## ...1 gender ethnicity score fcollege mcollege home urban unemp wage ## &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; ## 1 1 male other 39.</description>
     </item>
     
     <item>
-      <title>Hello R Markdown</title>
-      <link>/post/2015/07/23/hello-r-markdown/</link>
-      <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
+      <title>project1</title>
+      <link>/project/project1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/post/2015/07/23/hello-r-markdown/</guid>
-      <description>R Markdown This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
-You can embed an R code chunk like this:
-summary(cars) ## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 26.00 ## Median :15.0 Median : 36.00 ## Mean :15.4 Mean : 42.98 ## 3rd Qu.</description>
+      <guid>/project/project1/</guid>
+      <description>library(ggplot2) library(tidyverse) library(readr) drinks &amp;lt;- read_csv(&amp;quot;drinks.csv&amp;quot;) library(readxl) GDP1 &amp;lt;- read_excel(&amp;quot;GDP1.xls&amp;quot;) library(readxl) population_figures_by_country_csv_csv &amp;lt;- read_excel(&amp;quot;population-figures-by-country-csv_csv.xls&amp;quot;) Introduction: I have chosen three datasets to merge for this project. I chose to merge three datasets due to the fact that I could not find a sufficient amount of data by only merging two datasets. The first dataset I chose displays the servings of beer, wine and spirits in average serving sizes per person by country in 2010.</description>
     </item>
     
     <item>
@@ -55,15 +54,6 @@ summary(cars) ## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 2
  Wrangling &amp;amp; Exploratory Data Analysis
  Modeling, Inference, Prediction
   -- </description>
-    </item>
-    
-    <item>
-      <title>Resume</title>
-      <link>/resume/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/resume/</guid>
-      <description>    </description>
     </item>
     
   </channel>

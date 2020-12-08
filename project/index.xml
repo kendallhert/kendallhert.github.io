@@ -5,24 +5,23 @@
     <link>/project/</link>
     <description>Recent content in Projects on Kendall Hertenberger</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-US</language>
-    <lastBuildDate>Tue, 01 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="/project/index.xml" rel="self" type="application/rss+xml" />
+    <language>en-US</language><atom:link href="/project/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Project 1</title>
-      <link>/project/project1/</link>
-      <pubDate>Tue, 01 Dec 2020 00:00:00 +0000</pubDate>
+      <title>Project 2: Modeling</title>
+      <link>/project/project2/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/project/project1/</guid>
-      <description> Test Project 1  </description>
+      <guid>/project/project2/</guid>
+      <description>library(dplyr) ## ## Attaching package: &amp;#39;dplyr&amp;#39; ## The following objects are masked from &amp;#39;package:stats&amp;#39;: ## ## filter, lag ## The following objects are masked from &amp;#39;package:base&amp;#39;: ## ## intersect, setdiff, setequal, union library(readxl) collegedat&amp;lt;-read_excel(&amp;quot;CollegeDistance.xls&amp;quot;) ## New names: ## * `` -&amp;gt; ...1 head(collegedat) ## # A tibble: 6 x 15 ## ...1 gender ethnicity score fcollege mcollege home urban unemp wage ## &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; ## 1 1 male other 39.</description>
     </item>
     
     <item>
-      <title>Project 2</title>
-      <link>/project/project2/</link>
-      <pubDate>Tue, 01 Dec 2020 00:00:00 +0000</pubDate>
+      <title>project1</title>
+      <link>/project/project1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/project/project2/</guid>
-      <description> Test Project 2  </description>
+      <guid>/project/project1/</guid>
+      <description>library(ggplot2) library(tidyverse) library(readr) drinks &amp;lt;- read_csv(&amp;quot;drinks.csv&amp;quot;) library(readxl) GDP1 &amp;lt;- read_excel(&amp;quot;GDP1.xls&amp;quot;) library(readxl) population_figures_by_country_csv_csv &amp;lt;- read_excel(&amp;quot;population-figures-by-country-csv_csv.xls&amp;quot;) Introduction: I have chosen three datasets to merge for this project. I chose to merge three datasets due to the fact that I could not find a sufficient amount of data by only merging two datasets. The first dataset I chose displays the servings of beer, wine and spirits in average serving sizes per person by country in 2010.</description>
     </item>
     
   </channel>

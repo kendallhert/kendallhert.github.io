@@ -1,5 +1,5 @@
 ---
-title: 'First Post '
+title: 'Darrell the Dachshund '
 author: ''
 date: '2020-12-04'
 slug: first-post
@@ -7,5 +7,11 @@ categories: []
 tags: []
 description: ''
 ---
-#Hello
-Hello world, here is my dacshund, Darrell, in a cow costume.![](/post/2020-12-04-first-post_files/39A64D1A-1A54-4B0F-BC89-2378ACE01FA7.JPG)
+#All about Darrell
+Hello world! Here is my dacshund, Darrell, in a cow costume.![](/post/2020-12-04-first-post_files/39A64D1A-1A54-4B0F-BC89-2378ACE01FA7.JPG){width=50% height=50%}
+
+Darrell is six years old and his favorite things to do include playing fetch, going through the Starbucks drive-thru for puppuccinos, and sleeping inside of the fuzziest blankets he can find. 
+
+I got Darrell when he was just nine months old, he was dumped in a parking lot and of course I had to take him home with me. He came to live with me in Austin when I moved into my own apartment, and he is now officially a ~big city boi~ 
+
+![](/post/2020-12-04-first-post_files/96E5502F-D5C6-4B34-8E65-8D510869C9A5.JPG){width=85% height=85%}

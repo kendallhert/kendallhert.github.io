@@ -1,0 +1,25 @@
+---
+title: 'Python and R-studio '
+author: ''
+date: '2020-12-07'
+slug: python-and-r-studio
+categories: []
+tags: []
+description: ''
+---
+
+```{python}
+print("Hello World!")
+```
+
+After using R-studio for the majority of the semester, it definitely took me some time to adjust to Python. However, once I got the hang of it, I began to like it more than R-studio (*gasp).
+
+
+```{r}
+
+```
+
+```{python}
+
+```
+
