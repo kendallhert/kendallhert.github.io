@@ -6,14 +6,15 @@
     <description>Recent content on Kendall Hertenberger</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Mon, 07 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 08 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Python and R-studio </title>
-      <link>/post/2020/12/07/python-and-r-studio/</link>
-      <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
+      <title>Reticulate </title>
+      <link>/post/2020/12/08/reticulate/</link>
+      <pubDate>Tue, 08 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>/post/2020/12/07/python-and-r-studio/</guid>
-      <description>print(&amp;quot;Hello World!&amp;quot;) ## Hello World! After using R-studio for the majority of the semester, it definitely took me some time to adjust to Python. However, once I got the hang of it, I began to like it more than R-studio (*gasp).</description>
+      <guid>/post/2020/12/08/reticulate/</guid>
+      <description>#R-stuido hw&amp;lt;-&amp;quot;Hello World!&amp;quot; hw ## [1] &amp;quot;Hello World!&amp;quot; #python print(&amp;quot;Hello World!&amp;quot;) ## Hello World! Before even diving into reticulate, it is obvious that R-studio and Python have their differences. It was a difficult transition, but I have come to really enjoy Python. Reticulate allows you to work between R and Python, and an example will be shown below.
+library(reticulate) library(ggplot2) library(tidyverse) ## ── Attaching packages ─────────────────────────────────────────────────── tidyverse 1.3.0 ── ## ✓ tibble 3.</description>
     </item>
     
     <item>

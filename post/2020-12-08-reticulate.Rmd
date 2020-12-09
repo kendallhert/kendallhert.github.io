@@ -1,0 +1,44 @@
+---
+title: 'Reticulate '
+author: ''
+date: '2020-12-08'
+slug: reticulate
+categories: []
+tags: []
+description: ''
+---
+```{r}
+#R-stuido
+hw<-"Hello World!"
+hw
+```
+
+```{python}
+#python
+print("Hello World!")
+```
+
+Before even diving into reticulate, it is obvious that R-studio and Python have their differences. It was a difficult transition, but I have come to really enjoy Python. Reticulate allows you to work between R and Python, and an example will be shown below. 
+```{r}
+library(reticulate)
+library(ggplot2)
+library(tidyverse)
+library(readr)
+drinks <- read_csv("drinks.csv")
+drinks<-drinks
+```
+Now, the data from the dataset imported in R can be used in python to determine the mean of beer servings for all countries. When comparing the code used in Python to get the mean to the code used in R-studio, the differences become more clear. 
+```{python}
+r.drinks.beer_servings.mean()
+r.drinks.beer_servings.min()
+r.drinks.beer_servings.max()
+```
+Below is the R-studio code for mean beer servings for all countries: 
+```{r}
+drinks%>%summarize(mean(beer_servings))
+drinks%>%summarize(min(beer_servings))
+drinks%>%summarize(max(beer_servings))
+```
+
+CHEERS ![](/post/2020-12-08-reticulate_files/Untitled_Artwork.jpg){width=30% height=30%}
+(fun fact: I have been playing around with pro-create on my ipad, and I drew the image above on my ipad)
